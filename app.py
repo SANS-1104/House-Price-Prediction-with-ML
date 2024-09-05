@@ -18,7 +18,8 @@ no_of_rooms = st.selectbox('Select Expected No of Rooms in House',[i for i in ra
 
 no_of_bedrooms = st.selectbox('Select Expected No of BedRooms in House',[i for i in range(0,5)])
 
-members = st.number_input('How many members in your House?', format='%i',step=1, min_value=1, max_value=6)
+members = st.number_input('How many members in your House? (1-6)', format='%i',step=1, min_value=1, max_value=6)
+
 
 ave_occup = members / no_of_rooms if no_of_rooms > 0 else 0
 
@@ -29,11 +30,14 @@ population = 1372.7453488372093
 
 input_data = np.array([[salary_in_dollar, house_age, no_of_rooms, no_of_bedrooms, population, ave_occup, latitude, longitude]])
 
+if 1<=members<=6:
+    if st.button('Predict House Price'):
+        predicted_price = model.predict(input_data)
+        price_in_usd = predicted_price[0]
+        price_in_inr = price_in_usd * 83.99
 
-if st.button('Predict House Price'):
-    predicted_price = model.predict(input_data)
-    price_in_usd = predicted_price[0]
-    price_in_inr = price_in_usd * 83.99
-
-    st.success(f"The estimated house price is: $ {price_in_usd:,.2f}     or      ₹ {price_in_inr:,.2f}")
-    st.balloons()
+        st.success(f"The estimated house price is: $ {price_in_usd:,.2f}     or      ₹ {price_in_inr:,.2f}")
+        st.balloons()
+else:
+    st.error('No of Members cannot exceed 6')
+    
